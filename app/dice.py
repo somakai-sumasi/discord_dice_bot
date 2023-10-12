@@ -2,7 +2,8 @@ import random
 import re
 from dataclasses import dataclass
 from typing import List
-from lark import Lark, Transformer, LarkError
+
+from lark import Lark, LarkError, Transformer
 
 
 class Dice:
@@ -171,7 +172,7 @@ class CalculateTree(Transformer):
             return CalculateResult(True, args[0][0], True, args[0][1])
         elif self.has_comparison:
             return CalculateResult(False, 0, True, args[0][1])
-        elif self.has_arithmetic:
+        else:
             return CalculateResult(True, args[0], False, True)
 
 
@@ -195,7 +196,7 @@ class CalculateResult:
 calc = CalculateTree()
 
 
-def evaluate_expression(expression: str) -> str | None:
+def evaluate_expression(expression: str) -> CalculateResult | None:
     """算術表現を評価する関数
 
     Parameters
@@ -205,7 +206,7 @@ def evaluate_expression(expression: str) -> str | None:
 
     Returns
     -------
-    str | None
+    CalculateResult | None
         評価結果
     """
     try:
