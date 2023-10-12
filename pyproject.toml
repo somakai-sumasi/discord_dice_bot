@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "discord-dice-bot"
+version = "0.1.0"
+description = ""
+authors = ["somakai_sumasi <ueki@novasto.co.jp>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+isort = "^5.12.0"
+black = "^23.9.1"
+lark-parser = "^0.12.0"
+discord-py = "^2.3.2"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
