@@ -1,3 +1,4 @@
+import math
 import os
 
 import discord
@@ -26,16 +27,39 @@ async def on_message(message: discord.Message):
     if not dice.is_dice_roll:
         return
 
-    calculate_result = evaluate_expression(dice.calculate_txt)
-    if calculate_result == None:
+    result = evaluate_expression(dice.calculate_txt)
+    if result == None:
         return
 
-    if calculate_result.is_calculate and calculate_result.is_comparative:
-        await message.channel.send(dice.display_txt)
-    elif calculate_result.is_calculate:
-        await message.channel.send(dice.display_txt)
-    elif calculate_result.is_comparative:
-        await message.channel.send(dice.display_txt)
+    if result.is_calculate and result.is_comparative:
+        send_message = (
+            dice.display_txt
+            + " => "
+            + str(
+                math.floor(result.calculate_result)
+                if result.calculate_result.is_integer()
+                else result.calculate_result
+            )
+            + " => "
+            + str("成功" if result.comparative_result else "失敗")
+        )
+        await message.channel.send(send_message)
+    elif result.is_calculate:
+        send_message = (
+            dice.display_txt
+            + " => "
+            + str(
+                math.floor(result.calculate_result)
+                if result.calculate_result.is_integer()
+                else result.calculate_result
+            )
+        )
+        await message.channel.send(send_message)
+    elif result.is_comparative:
+        send_message = (
+            dice.display_txt + " => " + str("成功" if result.comparative_result else "失敗")
+        )
+        await message.channel.send(send_message)
 
 
 TOKEN = os.getenv("TOKEN")
