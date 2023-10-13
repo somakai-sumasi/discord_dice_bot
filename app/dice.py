@@ -26,7 +26,8 @@ class Dice:
     def __init__(self, txt: str) -> None:
         self.base_txt: str = txt
         self.is_dice_roll: bool = False
-        self.dice_results: List[DiceResult] = []
+        self.dm_results: List[DiceResult] = []
+        self.ndm_results: List[DiceResult] = []
         self.display_txt: str = ""
         self.calculate_txt: str = ""
 
@@ -35,27 +36,41 @@ class Dice:
 
     def roll(self) -> None:
         """ダイスを振る"""
-        dice_results = []
+        dm_results = []
+        ndm_results = []
         for match in re.finditer(r"(?<!\d)([dD](\d+))(?!\d)", self.base_txt):
             target = match.group(1)
             sided = int(match.group(2))
-            dice_results.append(DiceResult(target, dice_roll(sided)))
+            dm_results.append(DiceResult(target, dice_roll(sided)))
 
         for match in re.finditer(r"((\d+)[Dd](\d+))", self.base_txt):
             target = match.group(1)
             dice_qty = int(match.group(2))
             sided = int(match.group(3))
-            dice_results.append(DiceResult(target, dice_roll(sided, dice_qty)))
+            ndm_results.append(DiceResult(target, dice_roll(sided, dice_qty)))
 
-        self.dice_results = dice_results
-        if len(dice_results) > 0:
+        self.dm_results = dm_results
+        self.ndm_results = ndm_results
+
+        if len(dm_results) + len(ndm_results) > 0:
             self.is_dice_roll = True
 
     def set_value(self) -> None:
         """値をセットする"""
         display_txt = self.base_txt
         calculate_txt = self.base_txt
-        for dice_result in self.dice_results:
+
+        for dice_result in self.dm_results:
+            list_txt = "[" + ",".join(map(str, dice_result.result)) + "]"
+            sum_txt = str(sum(dice_result.result))
+            display_txt = re.sub(
+                rf"(?<!\d){dice_result.key}(?!\d)", list_txt, display_txt, 1
+            )
+            calculate_txt = re.sub(
+                rf"(?<!\d){dice_result.key}(?!\d)", sum_txt, calculate_txt, 1
+            )
+
+        for dice_result in self.ndm_results:
             list_txt = "[" + ",".join(map(str, dice_result.result)) + "]"
             sum_txt = str(sum(dice_result.result))
             display_txt = display_txt.replace(dice_result.key, list_txt, 1)
