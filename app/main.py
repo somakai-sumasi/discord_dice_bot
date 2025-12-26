@@ -2,7 +2,7 @@ import math
 import os
 
 import discord
-from dice import CalculateResult, Dice, evaluate_expression
+from dice import Dice, evaluate_expression
 from discord.ext import commands
 from dotenv import load_dotenv
 
