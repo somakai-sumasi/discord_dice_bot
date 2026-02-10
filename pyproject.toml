@@ -2,7 +2,7 @@
 name = "discord-dice-bot"
 version = "0.1.0"
 description = ""
-authors = ["somakai_sumasi <ueki@novasto.co.jp>"]
+authors = ["somakai_sumasi"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
